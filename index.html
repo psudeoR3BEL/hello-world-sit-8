@@ -1,0 +1,198 @@
+<html>
+<head>
+<title>Simple Calculator</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f0f0f0;
+}
+
+.calculator {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 300px;
+}
+
+.display {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-align: right;
+    font-size: 24px;
+    background-color: #eee;
+}
+
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 10px;
+}
+
+button {
+    padding: 15px;
+    font-size: 18px;
+    border: none;
+    border-radius: 5px;
+    background-color: #ddd;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #ccc;
+}
+
+.operator {
+    background-color: #ffa000;
+    color: white;
+}
+
+.operator:hover {
+    background-color: #ff8f00;
+}
+
+.equal {
+    background-color: #4caf50;
+    color: white;
+    grid-column: span 2;
+}
+
+.equal:hover {
+    background-color: #43a047;
+}
+
+.clear {
+    background-color: #f44336;
+    color: white;
+}
+
+.clear:hover {
+    background-color: #d32f2f;
+}
+</style>
+</head>
+<body>
+
+<div class="calculator">
+    <input type="text" class="display" id="display" value="0" readonly>
+    <div class="buttons">
+        <button class="operator clear" onclick="clearDisplay()">C</button>
+        <button class="operator" onclick="backspace()">←</button>
+        <button class="operator" onclick="appendOperator('/')">/</button>
+        <button class="operator" onclick="appendOperator('*')">*</button>
+
+        <button onclick="appendNumber('7')">7</button>
+        <button onclick="appendNumber('8')">8</button>
+        <button onclick="appendNumber('9')">9</button>
+        <button class="operator" onclick="appendOperator('-')">-</button>
+
+        <button onclick="appendNumber('4')">4</button>
+        <button onclick="appendNumber('5')">5</button>
+        <button onclick="appendNumber('6')">6</button>
+        <button class="operator" onclick="appendOperator('+')">+</button>
+
+        <button onclick="appendNumber('1')">1</button>
+        <button onclick="appendNumber('2')">2</button>
+        <button onclick="appendNumber('3')">3</button>
+        <button class="equal" onclick="calculate()">=</button>
+
+        <button onclick="appendNumber('0')">0</button>
+        <button onclick="appendDecimal()">.</button>
+    </div>
+</div>
+
+<script>
+let displayValue = '0';
+let operator = null;
+let firstValue = null;
+
+function updateDisplay() {
+    document.getElementById('display').value = displayValue;
+}
+
+function clearDisplay() {
+    displayValue = '0';
+    operator = null;
+    firstValue = null;
+    updateDisplay();
+}
+
+function backspace() {
+    if (displayValue.length > 1) {
+        displayValue = displayValue.slice(0, -1);
+    } else {
+        displayValue = '0';
+    }
+    updateDisplay();
+}
+
+function appendNumber(number) {
+    if (displayValue === '0' || displayValue === '-0') {
+        displayValue = number;
+    } else {
+        displayValue += number;
+    }
+    updateDisplay();
+}
+
+function appendDecimal() {
+    if (!displayValue.includes('.')) {
+        displayValue += '.';
+    }
+    updateDisplay();
+}
+
+function appendOperator(op) {
+    if (operator !== null) {
+        calculate();
+    }
+    firstValue = parseFloat(displayValue);
+    operator = op;
+    displayValue = '0';
+}
+
+function calculate() {
+    if (operator === null) return;
+    let secondValue = parseFloat(displayValue);
+    let result;
+
+    switch (operator) {
+        case '+':
+            result = firstValue + secondValue;
+            break;
+        case '-':
+            result = firstValue - secondValue;
+            break;
+        case '*':
+            result = firstValue * secondValue;
+            break;
+        case '/':
+            if (secondValue === 0) {
+                alert("Division by zero!");
+                return;
+            }
+            result = firstValue / secondValue;
+            break;
+        default:
+            return;
+    }
+
+    displayValue = String(result);
+    operator = null;
+    firstValue = null;
+    updateDisplay();
+}
+
+updateDisplay(); // Initialize display
+</script>
+
+</body>
+</html>
